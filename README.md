@@ -1,2 +1,3 @@
 # drawC
-Uma ferramenta de desenho criada com canvas (javascript)
+
+> Uma ferramenta de desenho de uso livre

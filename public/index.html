@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>drawC</title>
 	<link rel="stylesheet" href="../src/css/style.css">
 	<link rel="stylesheet" href="../src/midia/icons/font-awesome/css/all.min.css">
@@ -19,21 +20,93 @@
 	<canvas id="canvas"></canvas>
 
 	<footer>
+		<section id="auxilioFerramentas">
+
+			<div id="auxilioLapis" class="estiloAF caixaFerramentas"></div>
+			<div id="auxilioLapis" class="estiloAF caixaFerramentas"></div>
+
+			<div id="auxilioPincel" class="estiloAF caixaFerramentas">
+
+				<div id="tamanhoPincel">
+					<div id="desc">
+						<p>Tamanho</p>
+					</div>
+
+					<div id="conteudo">
+						<input id="rangeTamanhoPincel" type="range" min="1" max="100" value="14">
+					</div>
+				</div>
+
+				<div id="opacidadePincel">
+					<div id="desc">
+						<p>Opacidade</p>
+					</div>
+
+					<div id="conteudo">
+						<input id="rangePincelOpacidade" type="range" min="1" max="100" value="100">
+					</div>
+				</div>
+			</div>
+
+			<div id="auxilioLapis" class="estiloAF caixaFerramentas">
+				<div id="tamanhoLapis">
+					<div id="desc">
+						<p>Tamanho</p>
+					</div>
+
+					<div id="conteudo">
+						<input id="rangeTamanhoLapis" type="range" min="1" max="100" value="14">
+					</div>
+				</div>
+
+				<div id="opacidadeLapis">
+					<div id="desc">
+						<p>Opacidade</p>
+					</div>
+
+					<div id="conteudo">
+						<input id="rangeLapisOpacidade" type="range" min="1" max="100" value="100">
+					</div>
+				</div>
+			</div>
+
+			<div id="auxilioApagador" class="estiloAF caixaFerramentas">
+				<div id="limparTela">
+					<button>Limpar Tela</button>
+				</div>
+
+				<div id="tamanhoApagador">
+					<div id="desc">
+						<p>Tamanho</p>
+					</div>
+
+					<div id="conteudo">
+						<input id="rangeTamanhoApagador" type="range" min="1" max="100" value="14">
+					</div>
+				</div>
+			</div>
+
+		</section>
+
 		<section id="ferramentas">
-			<div id="paleta">
-				<i class="fa fa-palette"></i>
+			<div class="todasFerramentas" id="paleta" data-ferramenta="1">
+				<i class="fa fa-palette" data-ferramenta="1"></i>
 			</div>
 
-			<div id="figuras">
-				<i class="fa fa-square"></i>
+			<div class="todasFerramentas" id="figuras" data-ferramenta="2">
+				<i class="fa fa-square" data-ferramenta="2"></i>
 			</div>
 
-			<div id="lapis">
-				<i class="fa fa-pencil-alt"></i>
+			<div class="todasFerramentas" id="figuras" data-ferramenta="3">
+				<i class="fa fa-paint-brush" data-ferramenta="3"></i>
 			</div>
 
-			<div id="apagador">
-				<i class="fa fa-eraser"></i>
+			<div class="todasFerramentas" id="lapis" data-ferramenta="4">
+				<i class="fa fa-pencil-alt" data-ferramenta="4"></i>
+			</div>
+
+			<div class="todasFerramentas" id="apagador" data-ferramenta="5">
+				<i class="fa fa-eraser" data-ferramenta="5"></i>
 			</div>
 		</section>
 	</footer>

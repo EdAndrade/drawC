@@ -16,12 +16,29 @@ function App(){
 	this.lPosX = 0
 	this.lPosy = 0
 
-
+	//FERRAMENTAS
 	this.ferramentaActiva = 0
-	this.ferramentaEmUso = 4
-}
+	this.ferramentaEmUso = 2
 
-App.prototype.desenhandoNoDesktop = function(canvas, context){
+	//INICIO DA POSICAO DAS FIGURAS
+	this.figuraX = undefined
+	this.figuraY = undefined
+
+	//FINAL DA POSICAO DAS FIGURAS
+	this.finalFiguraX = undefined
+	this.finalFiguraY = undefined
+
+	//FIGURA SENDO DESENHADA
+	this.tipoFigura = 2
+	//Preenchimeto FALSE/TRUE
+	this.figuraPre = 0
+
+	//CONTROLADOR MENU
+	this.visMenu = 0
+}
+//===================================================================================///////////////
+
+App.prototype.desenhandoNoDesktop = function(canvas, context, canvas2, context2){
 	var that = this
 
 	canvas.addEventListener("mousemove", (event) => {
@@ -31,7 +48,11 @@ App.prototype.desenhandoNoDesktop = function(canvas, context){
 
 		if(that.mousedown){
 
-			if(that.ferramentaEmUso == 3){
+			if(that.ferramentaEmUso == 2){
+
+				that.figuras(canvas2, context2, posX, posY)
+
+			}else if(that.ferramentaEmUso == 3){
 
 				that.pincel(context, posX, posY)
 
@@ -50,6 +71,21 @@ App.prototype.desenhandoNoDesktop = function(canvas, context){
 }
 
 //=======================================================ESCONDER E MOSTRAR OS REGULADORES DAS FERRAMENTAS
+App.prototype.esconderMenu = function(){
+	var that = this
+	var caixaMenu = document.getElementById("menu")
+
+	document.getElementById("navbar").addEventListener("click", () => {
+		that.visMenu += 1
+
+		if(that.visMenu%2){
+			that.adicionarClasse(caixaMenu, "mostrarMenu")
+		}else{
+			that.removerClasse(caixaMenu, "mostrarMenu")
+		}
+	})
+}
+
 App.prototype.visibilidadeAuxilioFerramentas = function(){
 	var that = this
 
@@ -85,10 +121,72 @@ App.prototype.visibilidadeAuxilioFerramentas = function(){
 	}
 }
 
-App.prototype.dimensionarCanvas = function(){
+App.prototype.dimensionarCanvas = function(canvas){
 	canvas.width = window.innerWidth
 	canvas.height = window.innerHeight
 }
+//===================================================================================///////////////
+
+
+//=================================================================DESENHAR FIGURAS
+App.prototype.figuras = function(canvas2, context2, posX, posY, limpar=1){
+
+	if(this.figuraX == undefined){
+
+		this.figuraX = posX
+		this.figuraY = posY
+
+	}
+
+	this.finalFiguraX = posX
+	this.finalFiguraY = posY
+
+	if(limpar){
+		context2.clearRect(0,0, canvas2.width, canvas2.height)
+	}
+
+	if(this.tipoFigura == 1){
+
+		this.desenharQuadrado(context2, posX, posY)
+		
+	}else if(this.tipoFigura == 2){
+
+		this.desenharCirculo(context2, posX, posY)
+
+	}else if(this.tipoFigura == 3){
+
+		this.desenharRecta(context2, posX, posY)
+
+	}
+
+}
+
+App.prototype.desenharQuadrado = function(context2, posX, posY){
+	context2.strokeRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
+}
+
+App.prototype.desenharCirculo = function(context2, posX, posY){
+
+	var radius = posX-this.figuraX
+
+	if(radius < 0){
+		radius *= -1
+	}
+
+	context2.beginPath()
+	context2.arc(this.figuraX, this.figuraY, radius, 0, 2*Math.PI, false)
+	context2.closePath()
+	context2.stroke()
+}
+
+App.prototype.desenharRecta = function(context2, posX, posY){
+	context2.beginPath()
+	context2.moveTo(this.figuraX, this.figuraY)
+	context2.lineTo(posX, posY)
+	context2.stroke()
+	context2.closePath()
+}
+//===================================================================================///////////////
 
 
 //=================================================================FERRAMENTAS
@@ -98,9 +196,9 @@ App.prototype.lapis = function(context, posX, posY){
 	context.globalAlpha = this.lapisOpacidade
 	context.lineWidth = this.lapisTamanho
 	context.beginPath()
-	context.moveTo(this.lPosX, this.lPosy);
-    context.lineTo(posX, posY);
-    context.stroke();
+	context.moveTo(this.lPosX, this.lPosy)
+    context.lineTo(posX, posY)
+    context.stroke()
 	context.closePath()
 	context.fill()
 
@@ -112,12 +210,12 @@ App.prototype.lapis = function(context, posX, posY){
 App.prototype.pincel = function(context, posX, posY){
 
 	var gradient = context.createLinearGradient(posX-this.pincelTamanho, posY-this.pincelTamanho, posX, posY)
-	gradient.addColorStop(0, "rgb(245, 100, 200)")
-	gradient.addColorStop(1, "rgb(187, 110, 55)")
+	gradient.addColorStop(0, "rgb(124, 145, 123)")
+	gradient.addColorStop(1, "rgb(200, 167, 45)")
 	context.fillStyle = gradient
 	context.globalAlpha = this.pincelOpacidade
 	context.beginPath()
-	context.arc(posX, posY, this.pincelTamanho, 0, 2*Math.PI, false);
+	context.arc(posX, posY, this.pincelTamanho, 0, 2*Math.PI, false)
 	context.closePath()
 	context.fill()
 }
@@ -132,11 +230,11 @@ App.prototype.limparTela = function(context){
 	var that = this
 
 	buttonLimparTela.addEventListener("click", () => {
-		that.dimensionarCanvas()
+		that.dimensionarCanvas(canvas)
 	})
 }
 //=============================================PARA INFORMAR QUANDO O MOUSE FOI PRESSIONADO OU LARGADO
-App.prototype.mudarEstadoMouse = function(canvas){
+App.prototype.mudarEstadoMouse = function(canvas, context, context2){
 	var that = this
 
 	canvas.addEventListener("mousedown", (event) =>{
@@ -149,6 +247,18 @@ App.prototype.mudarEstadoMouse = function(canvas){
 
 	canvas.addEventListener("mouseup", (event) =>{
 		that.mousedown = 0
+
+		//CASO ESTEJA SE DESENHANDO ALGUMA FIGURA, DESENHAR AS POSICOES FINAIS E LIMPAR A SEGUNDA CAMADA
+		if(that.figuraX != undefined){
+			context2.clearRect(0, 0, canvas.width, canvas.height)
+			that.figuras(canvas, context, that.finalFiguraX, that.finalFiguraY, 0)
+
+		}
+
+		//SETANDO A POSICAO INICIAL PARA A CRIACAO DAS FIGURAS PARA INDIFINIDO
+		that.figuraX = undefined
+		that.figuraY = undefined
+
 	})
 }
 //===================================================================================///////////////
@@ -173,7 +283,7 @@ App.prototype.esconderSeccao = function(){
 App.prototype.actualizarTamanhoPincel = function(){
 	var that = this
 
-	var tamanhoDoPincel = document.getElementById("rangeTamanhoPincel");
+	var tamanhoDoPincel = document.getElementById("rangeTamanhoPincel")
 
 	tamanhoDoPincel.addEventListener("input", (event) => {
 		that.pincelTamanho = tamanhoDoPincel.value
@@ -183,7 +293,7 @@ App.prototype.actualizarTamanhoPincel = function(){
 App.prototype.actualizarPincelOpacidade = function(){
 	var that = this
 
-	var opacidade = document.getElementById("rangePincelOpacidade");
+	var opacidade = document.getElementById("rangePincelOpacidade")
 
 	opacidade.addEventListener("input", (event) => {
 		that.pincelOpacidade = opacidade.value/100
@@ -193,7 +303,7 @@ App.prototype.actualizarPincelOpacidade = function(){
 App.prototype.actualizarTamanhoLapis = function(){
 	var that = this
 
-	var tamanhoDoLapis = document.getElementById("rangeTamanhoLapis");
+	var tamanhoDoLapis = document.getElementById("rangeTamanhoLapis")
 
 	tamanhoDoLapis.addEventListener("input", (event) => {
 		that.lapisTamanho = tamanhoDoLapis.value
@@ -203,7 +313,7 @@ App.prototype.actualizarTamanhoLapis = function(){
 App.prototype.actualizarLapisOpacidade = function(){
 	var that = this
 
-	var opacidade = document.getElementById("rangeLapisOpacidade");
+	var opacidade = document.getElementById("rangeLapisOpacidade")
 
 	opacidade.addEventListener("input", (event) => {
 		that.lapisOpacidade = opacidade.value/100
@@ -213,7 +323,7 @@ App.prototype.actualizarLapisOpacidade = function(){
 App.prototype.actualizarTamanhoApagador= function(){
 	var that = this
 
-	var apagador = document.getElementById("rangeTamanhoApagador");
+	var apagador = document.getElementById("rangeTamanhoApagador")
 
 	apagador.addEventListener("input", (event) => {
 		that.tamanhoApagador = apagador.value
@@ -263,14 +373,23 @@ App.prototype.executarMetodos = function(){
 	var canvas = document.getElementById("canvas")
 	var context = canvas.getContext("2d")
 
-	this.desenhandoNoDesktop(canvas, context)
+	var canvas2 = document.getElementById("segundacamada")
+	var context2 = canvas2.getContext("2d")
+
+	this.desenhandoNoDesktop(canvas, context, canvas2, context2)
 	this.dimensionarCanvas(canvas)
-	this.mudarEstadoMouse(canvas)
 	this.redimensionando(canvas)
+
+	this.dimensionarCanvas(canvas2)
+	this.redimensionando(canvas2)
+
+	this.mudarEstadoMouse(canvas, context, context2)
+	
 	
 	this.visibilidadeAuxilioFerramentas()
 	this.esconderSeccao()
-	this.limparTela()
+	this.esconderMenu()
+	this.limparTela(canvas)
 
 	//ACTUALIZAR FERRAMENTAS
 	this.actualizarTamanhoApagador()

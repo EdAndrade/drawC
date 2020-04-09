@@ -15,12 +15,25 @@ html,body{
 	font-family: "Gordita";
 }
 
+#canvas{
+	position: absolute;
+	z-index: 200;
+}
+
+#segundacamada{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 100;
+}
+
 /*============================================================HEADER */
 header{
 	position: absolute;
 	right: 20px;
 	top: 20px;
 	cursor: pointer;
+	overflow: hidden;
 }
 
 #navbar .navbarline{
@@ -32,6 +45,35 @@ header{
 
 #navbar .navbarline:nth-child(2){
 	width: 15px;
+}
+
+#menu{
+	width: 200px;
+	height: 110px;
+	background-color: #fff;
+	box-shadow: 0px 0 5px 1px rgba(0,0,0,0.2);
+	border-radius: 6px;
+	padding: 10px;
+	position: absolute;
+	opacity: 0;
+	transform: translateX(200px);
+}
+
+#menu #bself{
+	color: orange;
+	font-size: 1.3em;
+	font-weight: 600;
+	font-family: "Gordita";
+}
+
+#menu #menu_conteudo{
+	font-size: 0.8em;
+	font-family: "Gordita";
+	margin-top: 17px;
+}
+
+#menu_conteudo p{
+	margin-top: 3px;
 }
 
 /*==============================================================FOOTER */
@@ -55,6 +97,7 @@ footer{
 	margin: auto;
 	transition: all 0.5s;
 	position: relative;
+	z-index: 400;
 }
 
 #ferramentas div{
@@ -98,6 +141,7 @@ footer{
 	transform: translateY(200px);
 	flex-flow: column;
 	justify-content: space-between;
+	z-index: 400;
 }
 
 #auxilioApagador button{
@@ -122,6 +166,11 @@ footer{
 .mostrarAuxilio{
 	opacity: 1;
 	transform: translateY(0);
+}
+
+.mostrarMenu{
+	opacity: 1;
+	transform: translateX(0);
 }
 
 /*===========================================================ESTILIZANDO TODOS OS RADIUS */

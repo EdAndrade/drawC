@@ -10,6 +10,15 @@
 </head>
 <body>
 	<header>
+		<div id="menu">
+			<p id="bself">Bself</p>
+			
+			<div id="menu_conteudo">
+				<p>Salvar</p>
+				<p>Pré-visualizar</p>
+			</div>
+		</div>
+
 		<nav id="navbar">
 			<div class="navbarline"></div>
 			<div class="navbarline"></div>
@@ -18,12 +27,34 @@
 	</header>
 
 	<canvas id="canvas"></canvas>
+	<canvas id="segundacamada"></canvas>
 
 	<footer>
 		<section id="auxilioFerramentas">
 
 			<div id="auxilioLapis" class="estiloAF caixaFerramentas"></div>
-			<div id="auxilioLapis" class="estiloAF caixaFerramentas"></div>
+			<div id="auxilioFiguras" class="estiloAF caixaFerramentas">
+				
+				<div id="botaoPreencher">
+					<button>Preencher</button>
+				</div>
+
+				<div id="todasFiguras">
+
+					<div id="figuraQuadrado">
+						<i class="fa fa-square"></i>
+					</div>
+
+					<div id="figuraTriangulo">
+						<i class="fa fa-circle"></i>
+					</div>
+
+					<div id="figuraRecta">
+						<i class="fa fa-line"></i>
+					</div>
+
+				</div>
+			</div>
 
 			<div id="auxilioPincel" class="estiloAF caixaFerramentas">
 

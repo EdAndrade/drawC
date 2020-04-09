@@ -29,7 +29,7 @@ function App(){
 	this.finalFiguraY = undefined
 
 	//FIGURA SENDO DESENHADA
-	this.tipoFigura = 2
+	this.tipoFigura = 1
 	//Preenchimeto FALSE/TRUE
 	this.figuraPre = 0
 
@@ -162,7 +162,12 @@ App.prototype.figuras = function(canvas2, context2, posX, posY, limpar=1){
 }
 
 App.prototype.desenharQuadrado = function(context2, posX, posY){
-	context2.strokeRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
+
+	if(this.figuraPre%2){
+		context2.fillRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
+	}else{
+		context2.strokeRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
+	}
 }
 
 App.prototype.desenharCirculo = function(context2, posX, posY){
@@ -176,7 +181,12 @@ App.prototype.desenharCirculo = function(context2, posX, posY){
 	context2.beginPath()
 	context2.arc(this.figuraX, this.figuraY, radius, 0, 2*Math.PI, false)
 	context2.closePath()
-	context2.stroke()
+	
+	if(this.figuraPre%2){
+		context2.fill()
+	}else{
+		context2.stroke()
+	}
 }
 
 App.prototype.desenharRecta = function(context2, posX, posY){
@@ -185,6 +195,37 @@ App.prototype.desenharRecta = function(context2, posX, posY){
 	context2.lineTo(posX, posY)
 	context2.stroke()
 	context2.closePath()
+}
+
+App.prototype.trocarFiguras = function(){
+
+	var todasFiguras = document.getElementsByClassName("selFig")
+	var that = this
+
+	for(let i = 0; i < todasFiguras.length; i++){
+
+		todasFiguras[i].addEventListener("click", (event) => {
+
+			var elemento = event.target.getAttribute("data-figura")
+			that.tipoFigura = Number(elemento)
+		})
+	}
+}
+
+//ALTERNAR ENTRE DESENHAR A FIGURA COM PREENCHIMENTO INTERNO OU SEM PREENCHIMENTO
+App.prototype.preFigura = function(){
+	var botaoFi = document.getElementById("botaoP")
+	var that = this
+
+	botaoFi.addEventListener("click", (event) => {
+		that.figuraPre += 1
+
+		if(that.figuraPre%2){
+			that.adicionarClasse(botaoFi, "preencherFiguras")
+		}else{
+			that.removerClasse(botaoFi, "preencherFiguras")
+		}
+	})
 }
 //===================================================================================///////////////
 
@@ -276,7 +317,7 @@ App.prototype.esconderSeccao = function(){
 			that.removerClasse("footer", "esconderFerramentas")
 		}
 
-	}, 1000)
+	}, 500)
 }
 
 //==================================================ACTUALIZACAO DOS TAMANHOS DAS FERRAMENTAS E OPACIDADE
@@ -384,12 +425,13 @@ App.prototype.executarMetodos = function(){
 	this.redimensionando(canvas2)
 
 	this.mudarEstadoMouse(canvas, context, context2)
-	
+	this.trocarFiguras()
 	
 	this.visibilidadeAuxilioFerramentas()
 	this.esconderSeccao()
 	this.esconderMenu()
 	this.limparTela(canvas)
+	this.preFigura()
 
 	//ACTUALIZAR FERRAMENTAS
 	this.actualizarTamanhoApagador()

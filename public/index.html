@@ -10,21 +10,20 @@
 </head>
 <body>
 	<header>
-		<div id="menu">
-			<p id="bself">Bself</p>
-			
-			<div id="menu_conteudo">
-				<p>Salvar</p>
-				<p>Pré-visualizar</p>
-			</div>
-		</div>
-
 		<nav id="navbar">
 			<div class="navbarline"></div>
 			<div class="navbarline"></div>
 			<div class="navbarline"></div>
 		</nav>
 	</header>
+	<section id="menu">
+		<p id="bself">Bself</p>
+		
+		<div id="menu_conteudo">
+			<p>Salvar</p>
+			<p>Pré-visualizar</p>
+		</div>
+	</section>
 
 	<canvas id="canvas"></canvas>
 	<canvas id="segundacamada"></canvas>
@@ -33,24 +32,25 @@
 		<section id="auxilioFerramentas">
 
 			<div id="auxilioLapis" class="estiloAF caixaFerramentas"></div>
+
 			<div id="auxilioFiguras" class="estiloAF caixaFerramentas">
 				
 				<div id="botaoPreencher">
-					<button>Preencher</button>
+					<button id="botaoP">Preencher</button>
 				</div>
 
 				<div id="todasFiguras">
 
-					<div id="figuraQuadrado">
-						<i class="fa fa-square"></i>
+					<div id="figuraQuadrado" class="estiloF selFig" data-figura="1">
+						<i class="fa fa-square" data-figura=1></i>
 					</div>
 
-					<div id="figuraTriangulo">
-						<i class="fa fa-circle"></i>
+					<div id="figuraTriangulo" class="estiloF selFig" data-figura="2">
+						<i class="fa fa-circle" data-figura="2"></i>
 					</div>
 
-					<div id="figuraRecta">
-						<i class="fa fa-line"></i>
+					<div id="figuraRecta" class="estiloF selFig" data-figura="3">
+						<div id="figuraRectaContent" data-figura="3"></div>
 					</div>
 
 				</div>

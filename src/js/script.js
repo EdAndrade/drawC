@@ -2,7 +2,7 @@ function App(){
 	this.mousedown = 0
 
 	//CONFIGURACOES PINCEL
-	this.pincelTamanho = 14
+	this.pincelTamanho = 30
 	this.pincelOpacidade = 1
 
 	//CONFIGURACOES LAPIS
@@ -18,7 +18,7 @@ function App(){
 
 	//FERRAMENTAS
 	this.ferramentaActiva = 0
-	this.ferramentaEmUso = 2
+	this.ferramentaEmUso = 4
 
 	//INICIO DA POSICAO DAS FIGURAS
 	this.figuraX = undefined
@@ -35,87 +35,293 @@ function App(){
 
 	//CONTROLADOR MENU
 	this.visMenu = 0
+
+	//ALTERNAR OS BOTOES CUSTOMIZAR COR
+	this.botaoCustomizarEmUso = 0
+
+	//COR EM USO
+	this.corFill = "#000"
+	this.corStroke = "#000"
+
+	//CUSTOMIZAR NORMAL
+	this.normalR = 0
+	this.normalG = 0
+	this.normalB = 0
+
+	//CUSTOMIZAR GRADIENTE
+	this.gradiente1R = 0
+	this.gradiente1G = 0
+	this.gradiente1B = 0
+	//////////////////////
+	this.gradiente2R = 0
+	this.gradiente2G = 0
+	this.gradiente2B = 0
+
+	//USO DO GRADIENTE
+	this.gradienteActivo = false
+
+	//COR DO GRADIENTE PARA DESENHO E BACKGROUND DA COR EM USO EM RGB
+	this.gradienteCor1 = "rgb(0,0,0)"
+	this.gradienteCor2 = "rgb(0,0,0)"
+
 }
 //===================================================================================///////////////
 
 App.prototype.desenhandoNoDesktop = function(canvas, context, canvas2, context2){
-	var that = this
 
 	canvas.addEventListener("mousemove", (event) => {
 
-		var posX = event.pageX
-		var posY = event.pageY
+		var posX = event.pageX; this.posGx = posX
+		var posY = this.posGy = event.pageY
 
-		if(that.mousedown){
+		if(this.mousedown){
 
-			if(that.ferramentaEmUso == 2){
+			if(this.ferramentaEmUso == 2){
 
-				that.figuras(canvas2, context2, posX, posY)
+				this.figuras(canvas2, context2, posX, posY)
 
-			}else if(that.ferramentaEmUso == 3){
+			}else if(this.ferramentaEmUso == 3){
 
-				that.pincel(context, posX, posY)
+				this.pincel(context, posX, posY)
 
-			}else if(that.ferramentaEmUso == 4){
+			}else if(this.ferramentaEmUso == 4){
 
-				that.lapis(context, posX, posY)
+				this.lapis(context, posX, posY)
 
-			}else if(that.ferramentaEmUso == 5){
+			}else if(this.ferramentaEmUso == 5){
 
-				that.apagador(context, posX, posY)
+				this.apagador(context, posX, posY)
 			}
 
 		}
 		
 	})
 }
+//===================================================================================///////////////
 
-//=======================================================ESCONDER E MOSTRAR OS REGULADORES DAS FERRAMENTAS
-App.prototype.esconderMenu = function(){
+//=======================================================PALETA DE CORES
+
+App.prototype.customizarNormal = function(){
+
+	var rangeNormalR = document.getElementById("normalR")
+	var rangeNormalG = document.getElementById("normalG")
+	var rangeNormalB = document.getElementById("normalB")
 	var that = this
+
+	function makeThis(){
+		that.atualizarCor( "rgb("+that.normalR+","+that.normalG+","+that.normalB+")" )
+		that.gradienteActivo = false
+	}	
+
+	rangeNormalR.addEventListener("input", () => {
+		this.normalR = rangeNormalR.value
+		makeThis()
+	})
+
+	rangeNormalG.addEventListener("input", () => {
+		this.normalG = rangeNormalG.value
+		makeThis()
+	})
+
+	rangeNormalB.addEventListener("input", () => {
+		this.normalB = rangeNormalB.value
+		makeThis()
+	})
+
+}
+
+App.prototype.customizarGradiente = function(context){
+
+	var rangeGradiente1R = document.getElementById("gradiente1R")
+	var rangeGradiente1B = document.getElementById("gradiente1G")
+	var rangeGradiente1G = document.getElementById("gradiente1B")
+
+	var rangeGradiente2R = document.getElementById("gradiente2R")
+	var rangeGradiente2G = document.getElementById("gradiente2G")
+	var rangeGradiente2B = document.getElementById("gradiente2B")
+	var that = this
+
+	//FUNCAO INTERNA
+	function makeThis(){
+		that.atualizarCor(  "rgb("+that.gradiente1R+","+that.gradiente1G+","+that.gradiente1B+")",
+							"rgb("+that.gradiente2R+","+that.gradiente2G+","+that.gradiente2B+")",context)
+
+		that.gradienteActivo = true
+	}
+
+	rangeGradiente1R.addEventListener("input", () => {
+		this.gradiente1R = rangeGradiente1R.value
+		makeThis()
+	})
+
+	rangeGradiente1G.addEventListener("input", () => {
+		this.gradiente1G = rangeGradiente1G.value
+		makeThis()
+	})
+
+	rangeGradiente1B.addEventListener("input", () => {
+		this.gradiente1B = rangeGradiente1B.value
+		makeThis()
+	})
+
+	rangeGradiente2R.addEventListener("input", () => {
+		this.gradiente2R = rangeGradiente2R.value
+		makeThis()
+	})
+
+	rangeGradiente2G.addEventListener("input", () => {
+		this.gradiente2G = rangeGradiente2G.value
+		makeThis()
+	})
+
+	rangeGradiente2B.addEventListener("input", () => {
+		this.gradiente2B = rangeGradiente2B.value
+		makeThis()
+	})
+
+}
+
+//ALERTAR ENTRE CUSTOMZICAO NORMAL OU GRADIENTE
+App.prototype.selecaoCorCustomizar = function(){
+
+	var botoesCores = document.getElementsByClassName("botoesParaCores")
+	var secoesCustomizar = document.getElementsByClassName("secoesCustomizar")
+	var that = this
+
+	for(let i = 0; i < botoesCores.length; i++){
+
+		botoesCores[i].addEventListener("click", function(event){
+
+			var selecionado = Number(this.getAttribute("data-customizar"))
+			console.log(selecionado)
+
+			if(selecionado){
+
+				that.gradienteActivo = true
+				that.atualizarCorEmUsoGrad(2)
+	
+			}else{
+				
+				that.gradienteActivo = false
+				that.atualizarCorEmUsoGrad(1)
+
+			}
+			
+			if(selecionado != that.botaoCustomizarEmUso){
+				that.removerClasse(botoesCores[that.botaoCustomizarEmUso], "selecionarBotaoCor")
+				that.removerClasse(secoesCustomizar[that.botaoCustomizarEmUso], "selecionarCustomizador")
+
+				that.adicionarClasse(botoesCores[selecionado], "selecionarBotaoCor")
+				that.adicionarClasse(secoesCustomizar[selecionado], "selecionarCustomizador")
+			}
+
+			that.botaoCustomizarEmUso = selecionado
+
+		})
+	}
+}
+
+App.prototype.selecionarCor = function(){
+
+	var cores = document.getElementsByClassName("palCor")
+	var that = this
+
+	for(let i = 0; i < cores.length; i++){
+
+		that.gradienteActivo = false
+
+		cores[i].addEventListener("click", function(event){
+
+			var cor = this.getAttribute("data-cor")
+			that.atualizarCor(cor)
+		})
+	}
+}
+
+App.prototype.atualizarCor = function(cor, cor2=undefined, context=undefined){
+
+	if(cor2 == undefined){
+		this.corStroke = cor
+		this.corFill  = cor
+		this.atualizarCorEmUsoGrad(1)
+		this.gradienteActivo = false
+	}else{
+
+		this.gradienteCor1 = cor
+		this.gradienteCor2  = cor2
+		this.atualizarCorEmUsoGrad(2)
+	}
+
+}
+
+App.prototype.atualizarCorEmUsoGrad = function(tipo){
+	var corEmUso = document.getElementById("corEmUsoCont")
+
+	if(tipo == 1){
+		corEmUso.style.backgroundImage = "none"
+		corEmUso.style.backgroundColor = this.corFill
+		console.log(this.corFill)
+	}else{
+		corEmUso.style.backgroundImage = "linear-gradient("+this.gradienteCor1+","+this.gradienteCor2+")"
+	}
+	
+}
+
+App.prototype.desenharComGradiente = function(context, posX, posY){
+	this.gradientCor = context.createLinearGradient(posX-this.pincelTamanho, posY-this.pincelTamanho, posX, posY)
+	this.gradientCor.addColorStop(0, this.gradienteCor1)
+	this.gradientCor.addColorStop(1, this.gradienteCor2)
+}
+
+//===================================================================================///////////////
+
+//=======================================================ESCONDER E MOSTRAR O MENU E OS REGULADORES DAS FERRAMENTAS
+App.prototype.esconderMenu = function(){
+
 	var caixaMenu = document.getElementById("menu")
 
 	document.getElementById("navbar").addEventListener("click", () => {
-		that.visMenu += 1
+		this.visMenu += 1
 
-		if(that.visMenu%2){
-			that.adicionarClasse(caixaMenu, "mostrarMenu")
+		if(this.visMenu%2){
+			this.adicionarClasse(caixaMenu, "mostrarMenu")
 		}else{
-			that.removerClasse(caixaMenu, "mostrarMenu")
+			this.removerClasse(caixaMenu, "mostrarMenu")
 		}
 	})
 }
 
 App.prototype.visibilidadeAuxilioFerramentas = function(){
-	var that = this
 
 	this.ferramentas = document.getElementsByClassName("todasFerramentas")
 	var auxilios    = document.getElementsByClassName("caixaFerramentas")
-	console.log(auxilios)
 
 	for(let i = 0; i < this.ferramentas.length; i++){
 
 		this.ferramentas[i].addEventListener("click", (event) => {
 
-			var ferramentaClicada = event.target.getAttribute("data-ferramenta")
-			that.ferramentaEmUso = ferramentaClicada
+			var ferramentaClicada = Number(event.target.getAttribute("data-ferramenta"))
 			
-			if(ferramentaClicada != that.ferramentaActiva){
+			if(ferramentaClicada != 1){
+				this.ferramentaEmUso = ferramentaClicada
+			}
+			
+			if(ferramentaClicada != this.ferramentaActiva){
 
-				if(that.ferramentaActiva){
+				if(this.ferramentaActiva){
 
-					that.removerClasse(auxilios[that.ferramentaActiva-1], "mostrarAuxilio")
-					that.adicionarClasse(auxilios[ferramentaClicada-1], "mostrarAuxilio")
+					this.removerClasse(auxilios[this.ferramentaActiva-1], "mostrarAuxilio")
+					this.adicionarClasse(auxilios[ferramentaClicada-1], "mostrarAuxilio")
 
 				}else{
-					that.adicionarClasse(auxilios[ferramentaClicada-1], "mostrarAuxilio")
+					this.adicionarClasse(auxilios[ferramentaClicada-1], "mostrarAuxilio")
 				}
 
-				that.ferramentaActiva = ferramentaClicada
+				this.ferramentaActiva = ferramentaClicada
 
 			}else{
-				that.removerClasse(auxilios[ferramentaClicada-1], "mostrarAuxilio")
-				that.ferramentaActiva = 0
+				this.removerClasse(auxilios[ferramentaClicada-1], "mostrarAuxilio")
+				this.ferramentaActiva = 0
 			}
 		})
 	}
@@ -164,8 +370,30 @@ App.prototype.figuras = function(canvas2, context2, posX, posY, limpar=1){
 App.prototype.desenharQuadrado = function(context2, posX, posY){
 
 	if(this.figuraPre%2){
+
+		if(this.gradienteActivo){
+
+			this.desenharComGradiente(context2, posX, posY)
+			context2.fillStyle = this.gradientCor
+
+		}else{
+			context2.fillStyle = this.corFill
+		}
+		
 		context2.fillRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
 	}else{
+
+		if(this.gradienteActivo){
+
+			this.desenharComGradiente(context2, posX, posY)
+			context2.strokeStyle = this.gradientCor
+
+			console.log("activo")
+
+		}else{
+			context2.strokeStyle = this.corStroke
+		}
+
 		context2.strokeRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
 	}
 }
@@ -183,13 +411,45 @@ App.prototype.desenharCirculo = function(context2, posX, posY){
 	context2.closePath()
 	
 	if(this.figuraPre%2){
+
+		if(this.gradienteActivo){
+
+			this.desenharComGradiente(context2, posX, posY)
+			context2.fillStyle = this.gradientCor
+
+		}else{
+
+			context2.fillStyle = this.corFill
+		}
+
 		context2.fill()
 	}else{
+
+		if(this.gradienteActivo){
+
+			this.desenharComGradiente(context2, posX, posY)
+			context2.strokeStyle = this.gradientCor
+
+		}else{
+			
+			context2.strokeStyle = this.corStroke
+		}
+
 		context2.stroke()
 	}
 }
 
 App.prototype.desenharRecta = function(context2, posX, posY){
+
+	if(this.gradienteActivo){
+
+		this.desenharComGradiente(context2, posX, posY)
+		context2.strokeStyle = this.gradientCor
+
+	}else{
+		context2.strokeStyle = this.corStroke
+	}
+
 	context2.beginPath()
 	context2.moveTo(this.figuraX, this.figuraY)
 	context2.lineTo(posX, posY)
@@ -200,14 +460,13 @@ App.prototype.desenharRecta = function(context2, posX, posY){
 App.prototype.trocarFiguras = function(){
 
 	var todasFiguras = document.getElementsByClassName("selFig")
-	var that = this
 
 	for(let i = 0; i < todasFiguras.length; i++){
 
 		todasFiguras[i].addEventListener("click", (event) => {
 
 			var elemento = event.target.getAttribute("data-figura")
-			that.tipoFigura = Number(elemento)
+			this.tipoFigura = Number(elemento)
 		})
 	}
 }
@@ -215,15 +474,14 @@ App.prototype.trocarFiguras = function(){
 //ALTERNAR ENTRE DESENHAR A FIGURA COM PREENCHIMENTO INTERNO OU SEM PREENCHIMENTO
 App.prototype.preFigura = function(){
 	var botaoFi = document.getElementById("botaoP")
-	var that = this
 
 	botaoFi.addEventListener("click", (event) => {
-		that.figuraPre += 1
+		this.figuraPre += 1
 
-		if(that.figuraPre%2){
-			that.adicionarClasse(botaoFi, "preencherFiguras")
+		if(this.figuraPre%2){
+			this.adicionarClasse(botaoFi, "preencherFiguras")
 		}else{
-			that.removerClasse(botaoFi, "preencherFiguras")
+			this.removerClasse(botaoFi, "preencherFiguras")
 		}
 	})
 }
@@ -233,7 +491,15 @@ App.prototype.preFigura = function(){
 //=================================================================FERRAMENTAS
 App.prototype.lapis = function(context, posX, posY){
 
-	context.strokeStyle = "red"
+	if(this.gradienteActivo){
+
+		this.desenharComGradiente(context, posX, posY)
+		context.strokeStyle = this.gradientCor
+
+	}else{
+		context.strokeStyle = this.corStroke
+	}
+
 	context.globalAlpha = this.lapisOpacidade
 	context.lineWidth = this.lapisTamanho
 	context.beginPath()
@@ -250,10 +516,16 @@ App.prototype.lapis = function(context, posX, posY){
 
 App.prototype.pincel = function(context, posX, posY){
 
-	var gradient = context.createLinearGradient(posX-this.pincelTamanho, posY-this.pincelTamanho, posX, posY)
-	gradient.addColorStop(0, "rgb(124, 145, 123)")
-	gradient.addColorStop(1, "rgb(200, 167, 45)")
-	context.fillStyle = gradient
+	if(this.gradienteActivo){
+
+		this.desenharComGradiente(context, posX, posY)
+		context.fillStyle = this.gradientCor
+
+	}else{
+
+		context.fillStyle = this.corFill
+	}
+
 	context.globalAlpha = this.pincelOpacidade
 	context.beginPath()
 	context.arc(posX, posY, this.pincelTamanho, 0, 2*Math.PI, false)
@@ -268,53 +540,50 @@ App.prototype.apagador = function(context, posX, posY){
 
 App.prototype.limparTela = function(context){
 	var buttonLimparTela = document.getElementById("limparTela")
-	var that = this
 
 	buttonLimparTela.addEventListener("click", () => {
-		that.dimensionarCanvas(canvas)
+		this.dimensionarCanvas(canvas)
 	})
 }
 //=============================================PARA INFORMAR QUANDO O MOUSE FOI PRESSIONADO OU LARGADO
 App.prototype.mudarEstadoMouse = function(canvas, context, context2){
-	var that = this
 
 	canvas.addEventListener("mousedown", (event) =>{
-		that.mousedown = 1
+		this.mousedown = 1
 
 		//ATUALIZANDO A ULTIMA POSICAO DO MOUSE
-		that.lPosX = event.clientX
-		that.lPosy = event.clientY
+		this.lPosX = event.clientX
+		this.lPosy = event.clientY
 	})
 
 	canvas.addEventListener("mouseup", (event) =>{
-		that.mousedown = 0
+		this.mousedown = 0
 
 		//CASO ESTEJA SE DESENHANDO ALGUMA FIGURA, DESENHAR AS POSICOES FINAIS E LIMPAR A SEGUNDA CAMADA
-		if(that.figuraX != undefined){
+		if(this.figuraX != undefined){
 			context2.clearRect(0, 0, canvas.width, canvas.height)
-			that.figuras(canvas, context, that.finalFiguraX, that.finalFiguraY, 0)
+			this.figuras(canvas, context, this.finalFiguraX, this.finalFiguraY, 0)
 
 		}
 
 		//SETANDO A POSICAO INICIAL PARA A CRIACAO DAS FIGURAS PARA INDIFINIDO
-		that.figuraX = undefined
-		that.figuraY = undefined
+		this.figuraX = undefined
+		this.figuraY = undefined
 
 	})
 }
 //===================================================================================///////////////
 
 App.prototype.esconderSeccao = function(){
-	var that = this
 
 	setInterval(() => {
 
-		if(that.mousedown){
-			if(that.existeClasse("footer", "esconderFerramentas") == -1){
-				that.adicionarClasse("footer", "esconderFerramentas")
+		if(this.mousedown){
+			if(this.existeClasse("footer", "esconderFerramentas") == -1){
+				this.adicionarClasse("footer", "esconderFerramentas")
 			}
 		}else{
-			that.removerClasse("footer", "esconderFerramentas")
+			this.removerClasse("footer", "esconderFerramentas")
 		}
 
 	}, 500)
@@ -322,53 +591,47 @@ App.prototype.esconderSeccao = function(){
 
 //==================================================ACTUALIZACAO DOS TAMANHOS DAS FERRAMENTAS E OPACIDADE
 App.prototype.actualizarTamanhoPincel = function(){
-	var that = this
 
 	var tamanhoDoPincel = document.getElementById("rangeTamanhoPincel")
 
 	tamanhoDoPincel.addEventListener("input", (event) => {
-		that.pincelTamanho = tamanhoDoPincel.value
+		this.pincelTamanho = tamanhoDoPincel.value
 	})
 }
 
 App.prototype.actualizarPincelOpacidade = function(){
-	var that = this
 
 	var opacidade = document.getElementById("rangePincelOpacidade")
 
 	opacidade.addEventListener("input", (event) => {
-		that.pincelOpacidade = opacidade.value/100
+		this.pincelOpacidade = opacidade.value/100
 	})
 }
 
 App.prototype.actualizarTamanhoLapis = function(){
-	var that = this
 
 	var tamanhoDoLapis = document.getElementById("rangeTamanhoLapis")
 
 	tamanhoDoLapis.addEventListener("input", (event) => {
-		that.lapisTamanho = tamanhoDoLapis.value
+		this.lapisTamanho = tamanhoDoLapis.value
 	})
 }
 
 App.prototype.actualizarLapisOpacidade = function(){
-	var that = this
 
 	var opacidade = document.getElementById("rangeLapisOpacidade")
 
 	opacidade.addEventListener("input", (event) => {
-		that.lapisOpacidade = opacidade.value/100
+		this.lapisOpacidade = opacidade.value/100
 	})
 }
 
 App.prototype.actualizarTamanhoApagador= function(){
-	var that = this
 
 	var apagador = document.getElementById("rangeTamanhoApagador")
 
 	apagador.addEventListener("input", (event) => {
-		that.tamanhoApagador = apagador.value
-		console.log(that.tamanhoApagador)
+		this.tamanhoApagador = apagador.value
 	})
 }
 
@@ -403,10 +666,9 @@ App.prototype.removerClasse = function(elemento, classe){
 //===================================================================================///////////////
 
 App.prototype.redimensionando = function(canvas){
-	var that = this
 
 	window.addEventListener("resize", () => {
-		that.dimensionarCanvas(canvas)
+		this.dimensionarCanvas(canvas)
 	})
 }
 
@@ -425,13 +687,21 @@ App.prototype.executarMetodos = function(){
 	this.redimensionando(canvas2)
 
 	this.mudarEstadoMouse(canvas, context, context2)
+
+	//FIGURAS
 	this.trocarFiguras()
+	this.preFigura()
 	
 	this.visibilidadeAuxilioFerramentas()
 	this.esconderSeccao()
 	this.esconderMenu()
 	this.limparTela(canvas)
-	this.preFigura()
+
+	//PALETA DE CORES
+	this.selecaoCorCustomizar()
+	this.selecionarCor()
+	this.customizarNormal()
+	this.customizarGradiente(context)
 
 	//ACTUALIZAR FERRAMENTAS
 	this.actualizarTamanhoApagador()

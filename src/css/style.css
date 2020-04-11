@@ -62,6 +62,7 @@ header{
 	right: 20px;
 	top: 20px;
 	transform: translateX(220px);
+	z-index: 1000;
 }
 
 #menu #bself{
@@ -126,7 +127,7 @@ footer{
 }
 
 
-/* ESTILO DO AUXILIO AO LAPIS E AO APAGADOR */
+/* ESTILO DO AUXILIO PADRAO DE TODAS FERRAMENTAS */
 .estiloAF{
 	width: 200px;
 	height: 105px;
@@ -184,6 +185,124 @@ footer{
 
 }
 
+#auxilioCores{
+	width: 500px;
+	height: 200px;
+	flex-flow: row;
+	padding: 10px;
+	justify-content: space-between;
+}
+
+#auxilioCores #padraocores{
+	width: 220px;
+	height: 180px;
+}
+
+#auxilioCores #customizarCor{
+	width: 200px;
+}
+
+#customizarCor .estiloRGB{
+	display: flex;
+}
+
+.estiloRGB p{
+	margin-right: 10px;
+}
+
+#customizarTitulo{
+	font-size: 1.3em;
+}
+
+#tiposCustomizar{
+	width: 170px;
+	height: 100%;
+	margin-top: 25px;
+	position: relative;
+	overflow: hidden;
+}
+
+#customizarNormal, #customizarGradiente{
+	position: absolute;
+	font-size: 0.9em;
+	transition: all 0.5s;
+	left: -100%;
+	opacity: 0;
+}
+
+#customizarGradiente #campoRGB2{
+	margin-top: 12px;
+}
+
+#auxilioCores .palCor{
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	float: left;
+	margin: 0 12px 6px 0;
+	cursor: pointer;
+}
+
+#botaoCores{
+	display: flex;
+	margin-top: 10px;
+}
+
+#botaoNormal, #botaoGradiente{
+	background-color: #fff;
+	border: solid 1px #000;
+	padding: 5px;
+	outline: none;
+	cursor: pointer;
+	transition: all 0.5s;
+	font-family: "Gordita";
+	font-size: 0.9em;
+	transition: all 0.5s;
+}
+
+#botaoGradiente{
+	border-radius: 0 3px 3px 0;
+}
+
+#botaoNormal{
+	border-right: none;
+	border-radius: 3px 0 0 3px;
+}
+
+#corEmUso{
+	width: 40px;
+	height: 100%;
+	position: relative;
+}
+
+#corEmUsoCont{
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	transition: all 0.5s;
+	background-color: #000;
+	position: absolute;
+	bottom: 0;
+	box-shadow: 0px 0 5px 1px rgba(0,0,0,0.2);
+}
+
+.palCor:nth-child(1){background-color: #000;}
+.palCor:nth-child(2){background-color: #fff; box-shadow: 0px 0 5px 1px rgba(0,0,0,0.2);}
+.palCor:nth-child(3){background-color: #3e57d4;}
+.palCor:nth-child(4){background-color: #3ed443;}
+.palCor:nth-child(5){background-color: #d4bb3e;}
+.palCor:nth-child(6){background-color: #d43e3e;}
+.palCor:nth-child(7){background-color: #d43e8a;}
+.palCor:nth-child(8){background-color: #7f3ed4;}
+.palCor:nth-child(9){background-color: #473ed4;}
+.palCor:nth-child(10){background-color: #3ed4b8;}
+.palCor:nth-child(11){background-color: #3ed44a;}
+.palCor:nth-child(12){background-color: #773b3b;}
+.palCor:nth-child(13){background-color: #3b7753;}
+.palCor:nth-child(14){background-color: #3b4b77;}
+.palCor:nth-child(15){background-color: #5a3b77;}
+.palCor:nth-child(16){background-color: #dc3746;}
+
 /*======================================================= ESTILOS PARA MOSTRAR E ESCONDER ELEMENTOS */
 .caixaFerramentas{
 	transition: all 0.5s;
@@ -207,6 +326,16 @@ footer{
 .preencherFiguras{
 	background-color: #000 !important;
 	color: #fff;
+}
+
+.selecionarBotaoCor{
+	background-color: #000 !important;
+	color: #fff;
+}
+
+.selecionarCustomizador{
+	left: 0 !important;
+	opacity: 1 !important;
 }
 
 /*===========================================================ESTILIZANDO TODOS OS RADIUS */

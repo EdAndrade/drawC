@@ -1,6 +1,10 @@
 function App(){
 	this.mousedown = 0
 
+	//CONFIGURACOES FIGURAS
+	this.figuraBorda = 3
+	this.figuraOpacidade = 1
+
 	//CONFIGURACOES PINCEL
 	this.pincelTamanho = 30
 	this.pincelOpacidade = 1
@@ -347,6 +351,9 @@ App.prototype.figuras = function(canvas2, context2, posX, posY, limpar=1){
 	this.finalFiguraX = posX
 	this.finalFiguraY = posY
 
+	context2.lineWidth = this.figuraBorda
+	context2.globalAlpha = this.figuraOpacidade
+
 	if(limpar){
 		context2.clearRect(0,0, canvas2.width, canvas2.height)
 	}
@@ -593,6 +600,24 @@ App.prototype.esconderSeccao = function(){
 }
 
 //==================================================ACTUALIZACAO DOS TAMANHOS DAS FERRAMENTAS E OPACIDADE
+App.prototype.actualizarBordaFigura = function(){
+
+	var bordaFigura = document.getElementById("rangeBordaFigura")
+
+	bordaFigura.addEventListener("input", (event) => {
+		this.figuraBorda = bordaFigura.value
+	})
+}
+
+App.prototype.actualizarOpacidadeFigura = function(){
+
+	var opacidade = document.getElementById("rangeOpacidadeFigura")
+
+	opacidade.addEventListener("input", (event) => {
+		this.figuraOpacidade = opacidade.value/100
+	})
+}
+
 App.prototype.actualizarTamanhoPincel = function(){
 
 	var tamanhoDoPincel = document.getElementById("rangeTamanhoPincel")
@@ -714,6 +739,9 @@ App.prototype.executarMetodos = function(){
 
 	this.actualizarTamanhoPincel()
 	this.actualizarPincelOpacidade()
+
+	this.actualizarBordaFigura()
+	this.actualizarOpacidadeFigura()
 }
 
 window.onload = () =>{

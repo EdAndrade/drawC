@@ -267,8 +267,8 @@ App.prototype.atualizarCorEmUsoGrad = function(tipo){
 	
 }
 
-App.prototype.desenharComGradiente = function(context, posX, posY){
-	this.gradientCor = context.createLinearGradient(posX-this.pincelTamanho, posY-this.pincelTamanho, posX, posY)
+App.prototype.desenharComGradiente = function(context, posX, posY, tamanhoFiguraX, tamanhoFiguraY){
+	this.gradientCor = context.createLinearGradient(posX-tamanhoFiguraX, posY-tamanhoFiguraY, posX, posY)
 	this.gradientCor.addColorStop(0, this.gradienteCor1)
 	this.gradientCor.addColorStop(1, this.gradienteCor2)
 }
@@ -369,23 +369,26 @@ App.prototype.figuras = function(canvas2, context2, posX, posY, limpar=1){
 
 App.prototype.desenharQuadrado = function(context2, posX, posY){
 
+	var tamanhoQuadradoX = posX-this.figuraX
+	var tamanhoQuadradoY = posY-this.figuraY
+
 	if(this.figuraPre%2){
 
 		if(this.gradienteActivo){
 
-			this.desenharComGradiente(context2, posX, posY)
+			this.desenharComGradiente(context2, posX, posY, tamanhoQuadradoX, tamanhoQuadradoY)
 			context2.fillStyle = this.gradientCor
 
 		}else{
 			context2.fillStyle = this.corFill
 		}
 		
-		context2.fillRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
+		context2.fillRect(this.figuraX, this.figuraY, tamanhoQuadradoX, tamanhoQuadradoY)
 	}else{
 
 		if(this.gradienteActivo){
 
-			this.desenharComGradiente(context2, posX, posY)
+			this.desenharComGradiente(context2, posX, posY, tamanhoQuadradoX, tamanhoQuadradoY)
 			context2.strokeStyle = this.gradientCor
 
 			console.log("activo")
@@ -394,7 +397,7 @@ App.prototype.desenharQuadrado = function(context2, posX, posY){
 			context2.strokeStyle = this.corStroke
 		}
 
-		context2.strokeRect(this.figuraX, this.figuraY, posX-this.figuraX, posY-this.figuraY)
+		context2.strokeRect(this.figuraX, this.figuraY, tamanhoQuadradoX, tamanhoQuadradoY)
 	}
 }
 
@@ -414,7 +417,7 @@ App.prototype.desenharCirculo = function(context2, posX, posY){
 
 		if(this.gradienteActivo){
 
-			this.desenharComGradiente(context2, posX, posY)
+			this.desenharComGradiente(context2, posX, posY, radius, radius)
 			context2.fillStyle = this.gradientCor
 
 		}else{
@@ -427,7 +430,7 @@ App.prototype.desenharCirculo = function(context2, posX, posY){
 
 		if(this.gradienteActivo){
 
-			this.desenharComGradiente(context2, posX, posY)
+			this.desenharComGradiente(context2, posX, posY, radius, radius)
 			context2.strokeStyle = this.gradientCor
 
 		}else{
@@ -443,7 +446,7 @@ App.prototype.desenharRecta = function(context2, posX, posY){
 
 	if(this.gradienteActivo){
 
-		this.desenharComGradiente(context2, posX, posY)
+		this.desenharComGradiente(context2, this.figuraX, this.figuraY, posX, posY)
 		context2.strokeStyle = this.gradientCor
 
 	}else{
@@ -493,7 +496,7 @@ App.prototype.lapis = function(context, posX, posY){
 
 	if(this.gradienteActivo){
 
-		this.desenharComGradiente(context, posX, posY)
+		this.desenharComGradiente(context, posX, posY, this.lapisTamanho, this.lapisTamanho)
 		context.strokeStyle = this.gradientCor
 
 	}else{
@@ -518,7 +521,7 @@ App.prototype.pincel = function(context, posX, posY){
 
 	if(this.gradienteActivo){
 
-		this.desenharComGradiente(context, posX, posY)
+		this.desenharComGradiente(context, posX, posY, this.pincelTamanho, this.pincelTamanho)
 		context.fillStyle = this.gradientCor
 
 	}else{

@@ -596,7 +596,7 @@ App.prototype.esconderSeccao = function(){
 			this.removerClasse("footer", "esconderFerramentas")
 		}
 
-	}, 500)
+	}, 100)
 }
 
 //==================================================ACTUALIZACAO DOS TAMANHOS DAS FERRAMENTAS E OPACIDADE

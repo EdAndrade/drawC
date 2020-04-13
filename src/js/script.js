@@ -71,34 +71,58 @@ function App(){
 }
 //===================================================================================///////////////
 
-App.prototype.desenhandoNoDesktop = function(canvas, context, canvas2, context2){
+App.prototype.desenhando = function(canvas, context, canvas2, context2, posX, posY, type="desktop"){
+
+	if(this.mousedown || type == "mobile"){
+
+		if(this.ferramentaEmUso == 2){
+
+			this.figuras(canvas2, context2, posX, posY)
+
+		}else if(this.ferramentaEmUso == 3){
+
+			this.pincel(context, posX, posY)
+
+		}else if(this.ferramentaEmUso == 4){
+
+			this.lapis(context, posX, posY)
+
+		}else if(this.ferramentaEmUso == 5){
+
+			this.apagador(context, posX, posY)
+		}
+
+	}
+
+}
+
+App.prototype.posMobile = function(canvas, context, canvas2, context2){
+
+	var that = this
+
+	function makeThis(event){
+
+		var posX = event.touches[0].pageX
+		var posY = event.touches[0].pageY
+
+		that.desenhando(canvas, context, canvas2, context2, posX, posY, "mobile")
+	}
+
+	canvas.addEventListener("touchmove", (event) => {
+		makeThis(event)
+	})
+
+}
+
+App.prototype.posDesktop = function(canvas, context, canvas2, context2){
 
 	canvas.addEventListener("mousemove", (event) => {
 
-		var posX = event.pageX; this.posGx = posX
-		var posY = this.posGy = event.pageY
+		var posX = event.pageX
+		var posY = event.pageY
 
-		if(this.mousedown){
+		this.desenhando(canvas, context, canvas2, context2, posX, posY)
 
-			if(this.ferramentaEmUso == 2){
-
-				this.figuras(canvas2, context2, posX, posY)
-
-			}else if(this.ferramentaEmUso == 3){
-
-				this.pincel(context, posX, posY)
-
-			}else if(this.ferramentaEmUso == 4){
-
-				this.lapis(context, posX, posY)
-
-			}else if(this.ferramentaEmUso == 5){
-
-				this.apagador(context, posX, posY)
-			}
-
-		}
-		
 	})
 }
 //===================================================================================///////////////
@@ -495,6 +519,21 @@ App.prototype.preFigura = function(){
 		}
 	})
 }
+
+//ALGUMAS CONFIGURACOES EXTRAS FIGURAS
+App.prototype.configFiguras = function(){
+
+	//CASO ESTEJA SE DESENHANDO ALGUMA FIGURA, DESENHAR AS POSICOES FINAIS E LIMPAR A SEGUNDA CAMADA
+	if(this.figuraX != undefined){
+		context2.clearRect(0, 0, canvas.width, canvas.height)
+		this.figuras(canvas, context, this.finalFiguraX, this.finalFiguraY, 0)
+
+	}
+
+	//SETANDO A POSICAO INICIAL PARA A CRIACAO DAS FIGURAS PARA INDIFINIDO
+	this.figuraX = undefined
+	this.figuraY = undefined
+}
 //===================================================================================///////////////
 
 
@@ -568,19 +607,25 @@ App.prototype.mudarEstadoMouse = function(canvas, context, context2){
 
 	canvas.addEventListener("mouseup", (event) =>{
 		this.mousedown = 0
-
-		//CASO ESTEJA SE DESENHANDO ALGUMA FIGURA, DESENHAR AS POSICOES FINAIS E LIMPAR A SEGUNDA CAMADA
-		if(this.figuraX != undefined){
-			context2.clearRect(0, 0, canvas.width, canvas.height)
-			this.figuras(canvas, context, this.finalFiguraX, this.finalFiguraY, 0)
-
-		}
-
-		//SETANDO A POSICAO INICIAL PARA A CRIACAO DAS FIGURAS PARA INDIFINIDO
-		this.figuraX = undefined
-		this.figuraY = undefined
+		this.configFiguras()
 
 	})
+}
+
+App.prototype.mudarEstadoTouch = function(canvas, context, context2){
+
+	canvas.addEventListener("touchstart", (event) => {
+		this.mousedown = 1
+		//ATUALIZANDO A ULTIMA POSICAO DO MOUSE
+		this.lPosX = event.touches[0].pageX
+		this.lPosy = event.touches[0].pageY
+	})
+
+	canvas.addEventListener("touchend", (event) => {
+		this.mousedown = 0
+		this.configFiguras()
+	})
+
 }
 //===================================================================================///////////////
 
@@ -707,7 +752,10 @@ App.prototype.executarMetodos = function(){
 	var canvas2 = document.getElementById("segundacamada")
 	var context2 = canvas2.getContext("2d")
 
-	this.desenhandoNoDesktop(canvas, context, canvas2, context2)
+	//ADQUIRINDO AS POSICOES PARA DESENHAR NO MOBILE E NO DESKTOP
+	this.posMobile(canvas, context, canvas2, context2)
+	this.posDesktop(canvas, context, canvas2, context2)
+
 	this.dimensionarCanvas(canvas)
 	this.redimensionando(canvas)
 
@@ -715,6 +763,7 @@ App.prototype.executarMetodos = function(){
 	this.redimensionando(canvas2)
 
 	this.mudarEstadoMouse(canvas, context, context2)
+	this.mudarEstadoTouch(canvas, context, context2)
 
 	//FIGURAS
 	this.trocarFiguras()

@@ -521,7 +521,7 @@ App.prototype.preFigura = function(){
 }
 
 //ALGUMAS CONFIGURACOES EXTRAS FIGURAS
-App.prototype.configFiguras = function(){
+App.prototype.configFiguras = function(canvas, context, context2){
 
 	//CASO ESTEJA SE DESENHANDO ALGUMA FIGURA, DESENHAR AS POSICOES FINAIS E LIMPAR A SEGUNDA CAMADA
 	if(this.figuraX != undefined){
@@ -607,7 +607,7 @@ App.prototype.mudarEstadoMouse = function(canvas, context, context2){
 
 	canvas.addEventListener("mouseup", (event) =>{
 		this.mousedown = 0
-		this.configFiguras()
+		this.configFiguras(canvas, context, context2)
 
 	})
 }
@@ -616,14 +616,14 @@ App.prototype.mudarEstadoTouch = function(canvas, context, context2){
 
 	canvas.addEventListener("touchstart", (event) => {
 		this.mousedown = 1
-		//ATUALIZANDO A ULTIMA POSICAO DO MOUSE
+		//ATUALIZANDO A ULTIMA POSICAO DO TOUCH
 		this.lPosX = event.touches[0].pageX
 		this.lPosy = event.touches[0].pageY
 	})
 
 	canvas.addEventListener("touchend", (event) => {
 		this.mousedown = 0
-		this.configFiguras()
+		this.configFiguras(canvas, context, context2)
 	})
 
 }

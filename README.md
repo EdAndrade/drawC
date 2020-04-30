@@ -1,2 +1,5 @@
 # drawC
-Um plugin de desenho para para ser implementado em qualquer plataforma web
+
+> Ferramenta de desenho de uso livre.
+
+drawC é uma ferramenta de uso livre, criada com canvas ( javascript )

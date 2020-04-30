@@ -304,20 +304,6 @@ App.prototype.desenharComGradiente = function(context, posX, posY, tamanhoFigura
 //===================================================================================///////////////
 
 //=======================================================ESCONDER E MOSTRAR O MENU E OS REGULADORES DAS FERRAMENTAS
-App.prototype.esconderMenu = function(){
-
-	var caixaMenu = document.getElementById("menu")
-
-	document.getElementById("navbar").addEventListener("click", () => {
-		this.visMenu += 1
-
-		if(this.visMenu%2){
-			this.adicionarClasse(caixaMenu, "mostrarMenu")
-		}else{
-			this.removerClasse(caixaMenu, "mostrarMenu")
-		}
-	})
-}
 
 App.prototype.visibilidadeAuxilioFerramentas = function(){
 
@@ -771,7 +757,6 @@ App.prototype.executarMetodos = function(){
 	
 	this.visibilidadeAuxilioFerramentas()
 	this.esconderSeccao()
-	this.esconderMenu()
 	this.limparTela(canvas)
 
 	//PALETA DE CORES

@@ -2,4 +2,4 @@
 
 > Ferramenta de desenho de uso livre.
 
-- [Site](https://drawc.netlify.app).
+- [Site](https://drawc.netlify.app)

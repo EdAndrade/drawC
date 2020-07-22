@@ -696,6 +696,30 @@ App.prototype.actualizarTamanhoApagador= function(){
 
 //===================================================================================///////////////
 
+//=========================================================================SALVAR DESENHO
+App.prototype.visualizarDesenho = function(){
+	const el = document.getElementById("save")
+	const el2 = document.getElementById("desenhar")
+	const popup = document.getElementById("popupsave")
+	const elClass = "hidden"
+
+	el.addEventListener("click", () => {
+		var draw = document.getElementById("canvas").toDataURL()
+		document.cookie = `draw=${draw}; Secure`
+		document.getElementById("draw").src = draw
+		this.removerClasse(popup, elClass)
+	})
+	el2.addEventListener("click", () => {
+		this.adicionarClasse(popup, elClass)
+	})
+}
+
+App.prototype.salvarDesenho = function(){
+	document.getElementById("salvar").addEventListener("click", () => {
+		alert("Sua arte foi salva com sucesso!")
+	})
+}
+
 
 //========================================================MANIPULACAO DE CLASSES
 App.prototype.existeClasse = function(elemento, classe){
@@ -776,6 +800,10 @@ App.prototype.executarMetodos = function(){
 
 	this.actualizarBordaFigura()
 	this.actualizarOpacidadeFigura()
+	
+	//SALVAR DESENHO
+	this.visualizarDesenho()
+	this.salvarDesenho()
 }
 
 window.onload = () =>{

@@ -716,7 +716,10 @@ App.prototype.visualizarDesenho = function(){
 
 App.prototype.salvarDesenho = function(){
 	document.getElementById("salvar").addEventListener("click", () => {
-		alert("Sua arte foi salva com sucesso!")
+		var draw = document.createElement('a')
+		draw.href = document.getElementById("canvas").toDataURL('image/png')
+		draw.download = 'desenho.png'
+		draw.click()
 	})
 }
 
